@@ -1,67 +1,39 @@
 # PiNode3
 PiNode3は温室ハウス内で動作するデータ収集システムです．
 
-# 実行環境
+# 変更内容
+・requirements.txtに必要ライブラリを追加
+・usb.pyがモータドライバを認識するように変更
+・毎日正午に画角調整を起動するnoon_monitor.timer,noon_monitor.serviceをserviceフォルダに追加
+・camera.pyにロック機能を追加(手動と自動が被らないようにするため)
+・srcフォルダにcamera_fast.py,send.py,mortor_test.py,watch.py,yolo_main.py,best_melon.ptを追加
 
-### OS要件
-動作確認済みOSは以下です。  
-lsb_release -a  
-No LSB modules are available.  
-Distributor ID: Debian  
-Description:    Debian GNU/Linux 12 (bookworm)  
-Release:        12  
-Codename:       bookworm  
+# usb.py
+変更前：spresenseかそれ以外かを判別　→　変更後：spresense,usbカメラ,モータドライバ,それ以外を判別
 
-確認方法
-``` bash
-$ sudo apt-get install lsb-release
-$ lsb_release -a
-```
+# 画角調整サービスファイル
+install.shにてサービス登録
+頻度，時刻などを変更する場合は適時変更
 
-# インストール
+# camera.py, camera_fast.py
+usb.pyの変更に伴い一部変更
+手動操作の追加に伴い，自動撮影との競合を避けるためロック機能を追加
+camera_fast.pyはspresenseでの撮影の際に低解像度画像取得の際使用(それ以外はcamera.pyと同じ)
 
-### I2C有効化
-温度，湿度，照度データはI2Cを用いて取得しています．Raspberry PiではデフォルトではI2Cからの通信を無効化しているため，
-有効化させる必要があります．
-``` bash
-$ sudo raspi-config
-```
-3 Interfacing Options -> I4 I2Cと進み，YESを選択します．
+# send.py
+異常検知時(距離が近い，検出対象が無い場合)にteamsに通知を行う機能．現在は大和コン関係者をメンションするため適時変更
 
-### SPI有効化
-果実径，茎径データはSPIを用いて取得しています．Raspberry PiではI2C同様無効化されているためこちらも有効化させます．
-``` bash
-$ sudo raspi-config
-```
-3 Interfacing Options -> I3 SPIと進み，YESを選択します．
-I2C，SPIを有効化した後はリブートすることで適応されます．
+# mortor_test.py
+サーボモータのモード切替，角度送信，角度読み取り等の関数を格納している．
+mainとして呼び出すことで手動操作を行うインターフェースとなる．(現在はコマンドプロンプトで操作)
 
-### ソフトウェアインストール
-本リポジトリをクローンし，ソフトウェアをインストールします．
+# watch.py
+特定のフォルダを監視して画像が取得された際に画角調整を起動するシステムのmainとなるコード
 
-リポジトリクローン
-``` bash
-git clone https://github.com/MinenoLab/PiNode3.git
-```
+# yolo_main.py
+watch.pyが画像を検知した際呼び出す．
+新規画像に対してyoloによる物体検出を行った後，モータ制御，ユーザ通知などを行う
 
-インストール
-``` bash
-cd PiNode3
-bash install.sh
-```
-
-以上でインストールは環境です．その他の設定等は[こちら](https://github.com/MinenoLab/PiNode3/blob/main/docs/source/get-started/index.rst)を参照してください．
-
-# データの確認
-本ソフトウェアはInfluxDBを使用しています．そのためダッシュボードを作成することでセンサデータの確認を容易に行うことができます．
-本章ではダッシュボードの作成方法を解説します．
-
-
-# フォルダ構成
-## Gitリポジトリ構成
-クローンした際のリポジトリ構成を以下に示します．
-<img src="./images/git-repository.png" alt="Gitリポジトリ構成">
-
-## インストール後内部構成
-<img src="./images/folder-software.png" alt="ソフトウェアフォルダ構成">
-<img src="./images/folder-config-data.png" alt="設定・データフォルダ構成">
+# best_melon.pt
+メロン画像1000枚を用いて学習したファイル
+"\\minelab-dataset\minelab-dataset\20260220_画角調整メロン_アノテーションデータ_甲部"にデータセット格納

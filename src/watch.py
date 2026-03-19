@@ -3,12 +3,8 @@ import time
 import os
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
-
-# ★ 物体検出スクリプトがあるフォルダのパスを追加
+# ★ 物体検出スクリプトがあるフォルダのパスを追加(別フォルダにある場合)
 sys.path.append('/home/pinode3/PiNode3/src')
-
-# ★ 物体検出スクリプトをインポート
-# (注: yolo_main.py に YOLO_main というクラスが存在する必要があります)
 try:
     from yolo_main import YOLO_main
 except ImportError as e:
@@ -17,12 +13,13 @@ except ImportError as e:
 
 # 監視するベースフォルダ
 BASE_PATH = "/home/pinode3/data/image"
-FOLDERS_TO_WATCH = ["image1","image2"]
+#"image2"又は"image4"の使うポートをリストに追加
+FOLDERS_TO_WATCH = ["image2"]
 
-# ★ 停止するまでの回数を設定
+# 停止するまでの回数を設定
 STOP_AFTER_COUNT = 3
 
-# ★ detector のインスタンス化 (YOLO_main クラスと仮定)
+# detector のインスタンス化 (YOLO_main クラス)
 try:
     detector = YOLO_main()
 except Exception as e:

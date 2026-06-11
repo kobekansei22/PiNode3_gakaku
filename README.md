@@ -2,11 +2,11 @@
 PiNode3は温室ハウス内で動作するデータ収集システムです．
 
 # 変更内容
-・requirements.txtに必要ライブラリを追加
-・usb.pyがモータドライバを認識するように変更
-・毎日正午に画角調整を起動するnoon_monitor.timer,noon_monitor.serviceをserviceフォルダに追加
-・camera.pyにロック機能を追加(手動と自動が被らないようにするため)
-・srcフォルダにcamera_fast.py,send.py,mortor_test.py,watch.py,yolo_main.py,best_melon.ptを追加
+- requirements.txtに必要ライブラリを追加
+- usb.pyがモータドライバを認識するように変更
+- 毎日正午に画角調整を起動するnoon_monitor.timer,noon_monitor.serviceをserviceフォルダに追加
+- camera.pyにロック機能を追加(手動と自動が被らないようにするため)
+- srcフォルダにcamera_fast.py,send.py,mortor_test.py,watch.py,yolo_main.py,best_melon.ptを追加
 
 ### usb.py
 変更前：spresenseかそれ以外かを判別　→　変更後：spresense,usbカメラ,モータドライバ,それ以外を判別
